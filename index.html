@@ -1,0 +1,147 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Malla Curricular - Licenciatura en Enfermería</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f8fa;
+      padding: 20px;
+    }
+    h2 {
+      color: #2c3e50;
+      border-bottom: 2px solid #ccc;
+      padding-bottom: 5px;
+    }
+    .materia {
+      display: inline-block;
+      margin: 5px;
+      padding: 10px 15px;
+      border-radius: 8px;
+      background-color: #e0e0e0;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .aprobada {
+      background-color: #4caf50;
+      color: white;
+    }
+    .encurso {
+      background-color: #e74c3c;
+      color: white;
+    }
+    .pendiente {
+      background-color: #bdc3c7;
+      color: black;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Malla Curricular Interactiva - Enfermería</h1>
+  <p>Haz clic en las materias para marcar como <strong>aprobada</strong> (verde), <strong>en curso</strong> (rojo) o <strong>pendiente</strong> (gris).</p>
+
+  <div id="malla">
+    <!-- Los ciclos y materias se insertarán desde JS -->
+  </div>
+
+  <script>
+    const ciclos = {
+      "Ciclo I": [
+        "Anatomía y Fisiología",
+        "Química General",
+        "Fundamentos de Enfermería I",
+        "Herramientas de la Información y Comunicación en Salud"
+      ],
+      "Ciclo II": [
+        "Microbiología y Parasitología",
+        "Bioestadística",
+        "Nutrición y Dietoterapia",
+        "Fundamentos de Enfermería II"
+      ],
+      "Ciclo III": [
+        "Fisiopatología",
+        "Farmacología",
+        "Metodología de la Investigación",
+        "Ética y Legislación en Enfermería"
+      ],
+      "Ciclo IV": [
+        "Psicología y Salud Mental",
+        "Enfermería al Adolescente y Adulto I",
+        "Epidemiología",
+        "Didáctica Aplicada a Enfermería I"
+      ],
+      "Ciclo V": [
+        "Enfermería al Adolescente y Adulto II",
+        "Enfermería en Salud Comunitaria I",
+        "Enfermería Materno Infantil I",
+        "Investigación Aplicada a Enfermería I"
+      ],
+      "Ciclo VI": [
+        "Enfermería en Salud Comunitaria II",
+        "Enfermería Materno Infantil II",
+        "Enfermería en Psiquiatría",
+        "Didáctica Aplicada a Enfermería II"
+      ],
+      "Ciclo VII": [
+        "Enfermería Materno Infantil III",
+        "Geriatría y Cuidados Paliativos",
+        "Administración y Gerencia de los Servicios de Enfermería Hospitalarios",
+        "Atención en Emergencias y Desastres"
+      ],
+      "Ciclo VIII": [
+        "Enfermería Quirúrgica",
+        "Administración y Gerencia de los Servicios de Enfermería Comunitarios",
+        "Investigación Aplicada a Enfermería II",
+        "Inglés"
+      ],
+      "Ciclo IX": [
+        "Ética",
+        "Bioquímica Humana",
+        "Sociología",
+        "Enfermería al Adolescente y Adulto I (refuerzo)"
+      ],
+      "Ciclo X": [
+        "Proceso de Graduación"
+      ]
+    };
+
+    const mallaDiv = document.getElementById("malla");
+
+    function getEstado(id) {
+      return localStorage.getItem(id) || "pendiente";
+    }
+
+    function cambiarEstado(element, id) {
+      const estados = ["pendiente", "aprobada", "encurso"];
+      let actual = estados.indexOf(element.dataset.estado);
+      let siguiente = (actual + 1) % estados.length;
+      element.dataset.estado = estados[siguiente];
+      element.className = "materia " + estados[siguiente];
+      localStorage.setItem(id, estados[siguiente]);
+    }
+
+    Object.entries(ciclos).forEach(([ciclo, materias]) => {
+      let h2 = document.createElement("h2");
+      h2.textContent = ciclo;
+      mallaDiv.appendChild(h2);
+
+      materias.forEach(materia => {
+        let id = `${ciclo} - ${materia}`;
+        let estado = getEstado(id);
+
+        let div = document.createElement("div");
+        div.textContent = materia;
+        div.className = "materia " + estado;
+        div.dataset.estado = estado;
+        div.onclick = () => cambiarEstado(div, id);
+        mallaDiv.appendChild(div);
+      });
+    });
+  </script>
+
+</body>
+</html>
